@@ -5,7 +5,7 @@ El principal objetivo de estas prácticas externas es calcular los sesgos teorí
 
 Para ello avanzaremos paso a paso. Para comenzar, las tareas a realizar serán las siguientes:
 1. Descargar este repositorio de GitHub en tu ordenador utilizando Git
-2. Abrir una branch nueva para añadir el programa que lea el fichero de estaciones (Cerrarla cuando ya esté lista)
+2. Crear una [branch](https://docs.github.com/es/github/collaborating-with-issues-and-pull-requests/creating-and-deleting-branches-within-your-repository) nueva que se llame "lectura-estaciones"  nueva para añadir el programa que lea el fichero de estaciones (Cerrarla cuando ya esté lista)
 3. Hacer un programa que represente las estaciones sísmicas y el contorno de las Islas Canarias en una misma imagen, utilizando los ficheros que hay en /utils_sergio/
 
 
@@ -23,6 +23,8 @@ Según vayamos avanzando, te iré poniendo en este fichero las tareas.
 
 ### Software recomendado:
 1. Utilizar Python 3.5 o mayor 
-2. Utilizar Visual Studio Code para editar el codigo y añadir los paquetes de: Test Explorer IU, Pylance, Python Test Explorer for Visual Studio Code, Python y Source Control (esta última no sé si viene preinstalada o no)
+2. Activar el [subsistema de linux](https://www.leninalbertop.com.ve/windows-subsystem-linux/)
+3. Instalar el [Windos Terminal](https://rkstrdee.medium.com/how-to-add-ubuntu-tab-to-windows-10s-new-terminal-271eb6dfd8ee) para que puedas trabajar con una terminal de linux sin prolemas 
+4. Utilizar [Visual Studio Code](https://code.visualstudio.com/download) para editar el codigo y añadir los paquetes de: Test Explorer IU, Pylance, Python Test Explorer for Visual Studio Code, Python y Source Control (esta última no sé si viene preinstalada o no)
 
 
