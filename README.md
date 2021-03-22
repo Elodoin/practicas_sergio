@@ -16,8 +16,8 @@ Cualquier actualización que se haga en el código endrás que añadirlo a este 
 Según vayamos avanzando, te iré poniendo en este fichero las tareas. 
 
 ### Recomendaciones: 
--Cada vez que hagas modificaciones sobre un fichero concreto, abre una branch nueva
--Cuando termines esas modificaciones y veas que el código funciona sin problemas cierra la branch y añade el código al master branch
+1. Cada vez que hagas modificaciones sobre un fichero concreto, abre una branch nueva
+2. Cuando termines esas modificaciones y veas que el código funciona sin problemas cierra la branch y añade el código al master branch
 
 *Estas dos recomendaciones te permitirán llevar un control sobre los cambios que vayas realizando. Si te lia un poco, guárdalo todo en la master branch y ya más adelante vamos viendo el tema de abrir branchs*
 
