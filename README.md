@@ -4,9 +4,14 @@
 El principal objetivo de estas prácticas externas es calcular los sesgos teorícos asociados a la geometría de las estaciones de la red sísmica de canarias. 
 
 Para ello avanzaremos paso a paso. Para comenzar, las tareas a realizar serán las siguientes:
-1. Descargar este repositorio de GitHub en tu ordenador utilizando [Git](https://medium.com/@sthefany/primeros-pasos-con-github-7d5e0769158c). Con este [glosario](https://deustopweb2018.github.io/glosario.html) quizás te es más fácil seguir todas las palabrejas que se utilizan. 
+1. Descargar este repositorio de GitHub en tu ordenador utilizando alguna de estas dos alternativas:
+  a. [Git](https://medium.com/@sthefany/primeros-pasos-con-github-7d5e0769158c).
+  b. [Github Desktop](https://desktop.github.com/)
+  Con este [glosario](https://deustopweb2018.github.io/glosario.html) quizás te es más fácil seguir todas las palabrejas que se utilizan. 
+  
 2. Crear una [branch](https://docs.github.com/es/github/collaborating-with-issues-and-pull-requests/creating-and-deleting-branches-within-your-repository) nueva que se llame "lectura-estaciones"  nueva para añadir el programa que lea el fichero de estaciones (Cerrarla cuando ya esté lista)
-3. Hacer un programa que represente las estaciones sísmicas y el contorno de las Islas Canarias en una misma imagen, utilizando los ficheros que hay en /utils_sergio/
+3. 
+4. Hacer un programa que represente las estaciones sísmicas y el contorno de las Islas Canarias en una misma imagen, utilizando los ficheros que hay en /utils_sergio/
 
 
 
