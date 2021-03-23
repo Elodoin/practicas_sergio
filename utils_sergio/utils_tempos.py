@@ -12,18 +12,19 @@ def tempos(H, h, D, v=np.array([4.2,6.3,7.5,8,8,8]),  z=np.array([0,4,12,18,20,3
 
 
     velocidad = 0
-    if h>0:
+    if h > 0:
         velocidad = v[ np.max( np.arange( len(z) )[(z < h) | (z == h)] ) ]
-    if h <0:
+    if h < 0:
         velocidad = v[0]
     #En el array tempos guardaremos los tiempos de llegada de cada rayo y en el array capa la capa en que se produce la refraccion critica, asignandole el valor de 0 al rayo directo.
     tempos = []
     pes = []
     capa  = []
+    
     #Distinguimos ahora los casos en que el terremoto se produce a una altura superior a la del sismometro y viceversa. Comenzamos con el caso en que el terremoto se produce por debajo del sismometro:
     if h + H >= 0:
         #Situamos el origen de las capas en el sismometro, de forma que variamos la profundidad de las capas y llamamos h a la profundidad del terremoto para este nuevo sistema de referencia.
-        z = np.concatenate(([0], z[1:]+H))
+        z = np.concatenate(([0], z[1:] + H))
 
 	#La siguiente linea de codigo nos solventa el problema que surge cuando el sismometro se produce a una profundidad > a z[1].
         z1 = z[z>=0]
@@ -97,31 +98,31 @@ def tempos(H, h, D, v=np.array([4.2,6.3,7.5,8,8,8]),  z=np.array([0,4,12,18,20,3
     #Vamos a estudiar ahora el caso en que el seismo se produce por encima del sismometro.
     else:
         #Cambiamos el origen de coordenadas de forma que ahora el terrremoto se produzca a una altitud 0, y el sismometro se encuentre a una profundidad h-H.
-        z = np.concatenate(([0], z[1:]-h))
-        z1 = z[z>=0]
+        z = np.concatenate(([0], z[1:] - h))
+        z1 = z[ z >= 0]
         #n0 representa el indice original de la primera capa.
-        n0 = len(z)-len(z1)
+        n0 = len(z) - len(z1)
         v = v[n0:]
         H = abs(h + H)
 
         #Separamos las capas entre aquellas por encima y por debajo del evento.
-        direc = z1[z1<H]
-        refrac = z1[z1>H]
+        direc = z1[z1 < H]
+        refrac = z1[z1 > H]
 
         #Para estudiar el rayo directo, a las que estan por encima le anadimos la profundidad del evento y calculamos las distancias entre capas.
         direc1 = np.concatenate((direc, [H]))
-        zp = direc1[1:]-direc1[:-1]
+        zp = direc1[1:] - direc1[:-1]
 
         #Introducimos una funcion que nos permite hallar el parametro p (equivalente a hallar el angulo de incidencia) para el rayo directo.
         def func(p):
-            u = D - np.sum(zp/np.sqrt((v[:len(zp)]*p)**(-2)-1))
+            u = D - np.sum(zp / np.sqrt((v[:len(zp)]*p)**(-2)-1))
             return u
 
         #Buscamos el cero de esta funcion mediante el metodo numerico brentq. (Ojo!, el metodo converge bien pero en ciertos casos advierte de una division por cero que puede ralentizar el programa)
-        p = brentq(func, 0, (1/(max(v[:len(zp)]))))
+        p = brentq(func, 0, (1 / (max(v[:len(zp)]))))
 
         #Hallamos el tiempo que tarda en llegar el rayo directo.
-        t = np.sum(zp/(v[:len(zp)]*np.sqrt(1-(p*v[:len(zp)])**2)))
+        t = np.sum(zp / (v[:len(zp)]*np.sqrt(1 - (p*v[:len(zp)])**2)))
 
         tempos.append(t)
         capa.append(0)
@@ -132,12 +133,12 @@ def tempos(H, h, D, v=np.array([4.2,6.3,7.5,8,8,8]),  z=np.array([0,4,12,18,20,3
             #Al contrario que antes, ahora la direc2 constituye el camino de bajada y la refrac2 el de subida, de resto todo es analogo.
             direc2 = np.concatenate((direc, refrac[:n]))
             refrac2 = refrac[:n]
-            zp = direc2[1:]-direc2[:-1]
+            zp = direc2[1:] - direc2[:-1]
             refrac2 = np.concatenate(([H], refrac2))
-            zr = refrac2[1:]-refrac2[:-1]
+            zr = refrac2[1:] - refrac2[:-1]
 
             #Al igual que antes, el valor de p viene dado por la capa de la refraccion critica.
-            p = 1/v[len(direc2)-1]
+            p = 1 / v[len(direc2) - 1]
 
             #Introducimos una funcion que nos permite hallar la distancia dn que recorre el rayo por la capa de refraccion critica.
             def fanc(dn):
@@ -160,16 +161,16 @@ def tempos(H, h, D, v=np.array([4.2,6.3,7.5,8,8,8]),  z=np.array([0,4,12,18,20,3
     return np.array([min(tempos)])[0], velocidad, pes[np.argmin(tempos)]
 
 
-# Calculo de la distancia
-def distance(lat1,lon1,lat2,lon2):
+# Calculo de la distancia entre dos puntos en la superficie de la tierra 
+def distance(lat1, lon1, lat2, lon2):
     # Earth Radius in KM
     R = 6371
-    dLat = np.radians(lat2-lat1)
-    dLon = np.radians(lon2-lon1)
+    dLat = np.radians(lat2 - lat1)
+    dLon = np.radians(lon2 - lon1)
     lat1 = np.radians(lat1)
     lat2 = np.radians(lat2)
-    a = np.sin(dLat/2) * np.sin(dLat/2) +  np.sin(dLon/2) * np.sin(dLon/2) * np.cos(lat1) * np.cos(lat2)
-    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
+    a = np.sin(dLat / 2) * np.sin(dLat / 2) +  np.sin(dLon / 2) * np.sin(dLon / 2) * np.cos(lat1) * np.cos(lat2)
+    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
     d = R * c
     return d
 
