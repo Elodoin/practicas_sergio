@@ -5,6 +5,15 @@ from scipy.optimize import brentq
 # Calculo de los desfases
 def tempos(H, h, D, v=np.array([4.2, 6.3, 7.5, 8, 8, 8]), z=np.array([0, 4, 12, 18, 20, 32])):
     # Redondeamos para evitar problemas con brentq() despues.
+    """
+    H: Altura de la estacion en metros 
+    h: Profundidad a la que ocurre el terremoto 
+    D: Distancia entre el epicentro del terremoto y la estación sísmica 
+    v: Velocidades del modelo de terreno
+    z: Capas de profundidad del modelo de terreno 
+    
+    Tanto H como h se introducen con signo positivo
+    """
     h = np.around(h, 10)
     H = np.around(H, 10)
     D = np.around(D, 10)
@@ -192,6 +201,10 @@ def tempos(H, h, D, v=np.array([4.2, 6.3, 7.5, 8, 8, 8]), z=np.array([0, 4, 12, 
 
 # Calculo de la distancia entre dos puntos en la superficie de la tierra
 def distance(lat1, lon1, lat2, lon2):
+    """
+    lat1, lon1: Latitud y Longitud del primer punto
+    lat2, lon2: Latitud y Longitud del segundo punto 
+    """
     # Earth Radius in KM
     R = 6371
     dLat = np.radians(lat2 - lat1)
