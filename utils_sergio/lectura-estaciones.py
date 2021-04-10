@@ -5,70 +5,52 @@ import numpy as np
 import utils_tempos as ut
 
 #Extraemos de los ficheros las posiciones de las islas y de las esatciones sismicas
-islas_long, islas_lat = np.loadtxt("utils_sergio\contorno_islas.txt", unpack=True)
-est_lat, est_long, est_alturas = np.loadtxt("utils_sergio\\fichero_estaciones.txt", comments='---', usecols=(4, 5, 6), unpack=True)
-vel, capas = np.loadtxt("utils_sergio\canary.txt", comments='!', usecols=(3, 4), unpack=True)
+islas_long,islas_lat = np.loadtxt("contorno_islas.txt", unpack=True)
+est_lat,est_long,est_alturas=np.loadtxt("fichero_estaciones.txt",comments='---',usecols=(4,5,6),unpack=True)
+vel,capas=np.loadtxt("canary.txt",comments='!',usecols=(3,4),unpack=True)
 
-rango_longitudes = np.arange(-17, -16, 0.05)
-rango_latitudes = np.arange(28.6, 27.9, -0.05)
-rango_profundidades = np.arange(0, 20, 5)
+rango_longitudes=np.arange(-17,-16,0.05)
+rango_latitudes=np.arange(28.6,27.9,-0.05)
+rango_profundidades=np.arange(0,20,5)
 
-puntos_mapa = np.array([rango_longitudes, rango_latitudes, rango_profundidades])
-estaciones = np.array([est_long, est_lat, est_alturas])
-
-"""
-
-Primero vamos a calcular las distancias de cada punto en el rango elegido a las estaciones.
-Para ordenar los datos los colocaremos en una matriz 2D en la que cada columna representara
-una estacion y cada fila la distancia a dicha estacion
+puntos_mapa=np.array([rango_longitudes,rango_latitudes,rango_profundidades])
+estaciones=np.array([est_long,est_lat,est_alturas])
 
 """
+Creamos una matriz bidimensional en la que cada columna representa una profundidad.
+Los datos en cada fila se ordenan de manera que se colocan para el primer punto, todos los tiempos de llegada hasta cada estacion,
+despues los tiempos de llegada desde el segundo punto hasta cada esatcion y asi sucesivamente.
 
-def distancia(estaciones, puntos_mapa):
-    d=np.zeros((len(puntos_mapa[0])*len(puntos_mapa[1]),len(estaciones[0])))
-    for k in np.arange(len(estaciones[0])):#Este bucle recorre cada estacion
-        c=0
-        for i in np.arange(len(puntos_mapa[1])): #Este buble recorre cada longitud (cada fila)
-            for j in np.arange(len(puntos_mapa[0])): #Este bucle recorre cada latitud (cada columna dentro de cada fila)
-                #Calculamos la distancia entre la estación k-esima y el punto del mapa [i][j] 
-                d[c][k] = ut.distance(estaciones[1][k], estaciones[0][k], puntos_mapa[1][i], puntos_mapa[0][j])
-                c+=1
-    return d
-    
+Si tenemos 10 estaciones, los 10 primeros valores en cada columna seran los tiempos de llegada del primer punto a cada estacion, 
+y la profundidad viene indicada por la columna en la que se encuentra. Los siguientes 10 valores serían los tiempos de llegada
+del segundo punto a cada una de las 10 estaciones, y asi sucesivamente.
 """
 
-A continuación calcularemos los tiempos de llegada de las ondas desde cada punto del rango elegido a cada estacion.
-Como en el caso de las distancias, organizamos los datos en una matriz 2D, en la que cada columna
-se corresponde con una estacion, y los tiempos de corresponden con los tiempos que tarda la onda P o S
-en llegar desde cada localizacion a la estacion correspondiente.
-
-De esta forma, si tenemos como rango de profundidades con 5 valores, los 5 primeros valores de la primera columna
-se corresponderan con los tiempos de llegada de la onda desde el primer punto del mapa a la primera estacion para 
-cada una de las posibles profundidades, los 5 siguientes al tiempo desde el segundo punto a cada posible 
-profundidad a la primera estacion, etc...
-
-El programa calcula los tiempos de izquierda a derecha y de arriba abajo en el mapa.
-
-"""   
-def tiempo(estaciones, puntos_mapa):
-    distancias = distancia(estaciones,puntos_mapa)
-    tempos = np.zeros((len(distancias[:,0])*len(puntos_mapa[2]),len(estaciones[0])))
-    for k in np.arange(len(estaciones[0])):#Este bucle recorre cada estacion
-        c=0
-        for i in np.arange(len(distancias[:,0])): #Este buble recorre cada distancias que hemos calculado
-            for j in np.arange(len(puntos_mapa[2])): #Este bucle recorre el rango de profundidades para cada distancia calculada
-                #Calculamos los tiempos entre la estación k-esima y los puntos i-esimos a las profundidades j-esimas 
-                a = ut.tempos(estaciones[2][k]/1000, puntos_mapa[2][j], distancias[i][k], vel, capas)
-                tempos[c][k]=a[0]
-                c+=1
+def tiempo(estaciones,puntos_mapa):
+    d=np.zeros((len(estaciones[0]),len(puntos_mapa[0])*len(puntos_mapa[1]))) #Matriz donde cada columna es un punto del mapa y cada fila una estacion
+    tempos=np.zeros((len(puntos_mapa[0])*len(puntos_mapa[1])*len(estaciones[0]),len(puntos_mapa[2])))
+    c=0 #la c representa cada punto del mapa
+    p=0 #la p representa cada fila de datos
+    for i in np.arange(len(puntos_mapa[0])): #Este buble recorre cada longitud en el mapa (eje x)
+        for j in np.arange(len(puntos_mapa[1])): #Este bucle recorre cada latitud en el mapa (eje y)
+            for r in np.arange(len(estaciones[0])): #Este bucle recorre cada estacion
+                d[r][c]=ut.distance(puntos_mapa[1][j],puntos_mapa[0][i],estaciones[1][r],estaciones[0][r]) #Calculamos las distancias
+                for k in np.arange(len(puntos_mapa[2])): #Este bucle recorre cada profundidad
+                    t=ut.tempos(estaciones[2][r]/1000,puntos_mapa[2][k],d[r][c],vel,capas) 
+                    tempos[p][k]=t[0]
+                p+=1 
+            c+=1    
     return tempos
+  
 
-onda_P=tiempo(estaciones, puntos_mapa)
-onda_S=onda_P/1.78
 
+tiempos=tiempo(estaciones, puntos_mapa)
+#onda_P=tiempo(estaciones, puntos_mapa)
+#onda_S=onda_P/1.78
+#np.savetxt('OndaP.txt',onda_P,fmt='%.1f',delimiter='   ')
 
 #Definimos la funcion mediante la que representaremos nuestra imagen
-def representacion(islas_x, islas_y, est_x,est_y):
+def representacion(islas_x,islas_y,est_x,est_y):
     plt.plot(islas_x,islas_y,',')     
     plt.plot(est_x,est_y,'.')
     plt.xlabel('Longitud')
