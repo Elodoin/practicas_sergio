@@ -40,27 +40,59 @@ nos dan en el fichero_estaciones pasados a formato de fecha. Lo he hecho asi (un
 dt.datetime.strptime no dejaba trabajar con las variables tipo str_, que son las que da por defecto python 
 al extraer str de un fichero, y no lograba cambiarlas de otra manera a un str normal
 """
-inicio_medicion=dt.datetime(1999,11,7,00,00,00)
 
-def seleccion_estaciones(est,inicio_medicion):
+inicio_medicion=dt.datetime(1999,11,7,00,00,00)
+estaciones_medibles=np.array(['CCAN','CCHO','CFTV'])
+def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
+    """
+    In:
+        Estaciones = Array de 3 arrays en los que colocaremos la longitud, latitud y profundidad de cada estacion respectivamente
+        Momento_medicion = Momento del que queremos obtener las medidas, ha de ser introducido en formato de fecha (con el modulo datetime)
+        Estaciones_medibles = Array con los nombres de las estaciones que queremos tener en cuenta al realizar las medidas
+        Nombre= Array con los nombres de todas las estaciones
+        Fecha_i, Hora_i= Arrays con las fechas y horas del inicio de funcionamiento de cada estacion (el programa las convierte al formato datetime )
+        Fecha_f, Hora_f= Arrays con las fechas y horas del final de funcionamiento de cada estacion  (el programa las convierte al formato datetime )
+
+    Out:
+        estaciones0 = array con la longitud de las estaciones seleccionadas
+        estaciones1 = array con la latitud de las estaciones seleccionadas
+        estaciones2 = array con la profundidad de las estaciones seleccionadas
+    """
     estaciones0=np.array([])
     estaciones1=np.array([])
     estaciones2=np.array([])
     for i in np.arange(len(est[0])):
-        inicio_estacion=dt.datetime.strptime(fecha_i[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
-        final_estacion=dt.datetime.strptime(fecha_f[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
-        if inicio_estacion<=inicio_medicion<=final_estacion: #Comprobamos si cada i-estacion esta activa en el momento de la medicion
-            estaciones0=np.append(estaciones0,est[0][i]) 
-            estaciones1=np.append(estaciones1,est[0][i])
-            estaciones2=np.append(estaciones2,est[0][i])  
-    return estaciones0,estaciones1,estaciones2  
+       for j in np.arange(len(estaciones_medibles)):
+           if estaciones_medibles[j]==nombre[i]: #Solo vamos a usar aquellas estaciones cuyo ni¡ombre coincida con alguno de los que esta en las esatciones_medibles
+               inicio_estacion=dt.datetime.strptime(fecha_i[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
+               final_estacion=dt.datetime.strptime(fecha_f[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
+               if inicio_estacion<=inicio_medicion<=final_estacion: #Comprobamos si cada i-estacion esta activa en el momento de la medicion
+                   estaciones0=np.append(estaciones0,est[0][i]) 
+                   estaciones1=np.append(estaciones1,est[0][i])
+                   estaciones2=np.append(estaciones2,est[0][i])  
+    return estaciones0,estaciones1,estaciones2
 
 #He tenido que crear 3 arrays y luego juntarlos porque no me dejaba hacerlo directamente como un array de arrays 
 #e ir añadiendo valores a cada uno de ellos. Tratare de hacerlo un poco mas "elegantemente mañana".
 
 
-def tiempo(est,puntos_mapa):
-    a,b,c=seleccion_estaciones(est,inicio_medicion)
+def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
+    """
+    In:
+        Estaciones = Array de 3 arrays en los que colocaremos la longitud, latitud y profundidad[km] de cada estacion respectivamente 
+        Punto_mapa = Array de 3 arrays en los que colocaremos la longitud, latitud y profundidad[km] de cada punto del mapa que queremos tener en cuenta
+        Momento_medicion = Momento del que queremos obtener las medidas, ha de ser introducido en formato de fecha (con el modulo datetime)
+        Estaciones_medibles = Array con los nombres de las estaciones que queremos tener en cuenta al realizar las medidas
+        Nombre= Array con los nombres de todas las estaciones
+        Fecha_i, Hora_i= Arrays con las fechas y horas del inicio de funcionamiento de cada estacion (el programa las convierte al formato datetime )
+        Fecha_f, Hora_f= Arrays con las fechas y horas del final de funcionamiento de cada estacion  (el programa las convierte al formato datetime )
+
+    Out:
+        tempos = Array bidimensional con los tiempos de llegada de las ondas P a las esatciones que hemos indicado que queremos usar. 
+                 Cada columna representa una profundidad y en ellas se colocan los tiempos, primero desde el primer punto hasta cada 
+                 una de las estaciones, despues desde el segundo punto a cada esatcion y así sucesivamente.
+    """
+    a,b,c=seleccion_estaciones(est,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
     estaciones=np.array([a,b,c]) #Este es el array que contiene los datos geograficos de las estaciones señaladas 
     d=np.zeros((len(estaciones[0]),len(puntos_mapa[0])*len(puntos_mapa[1]))) #Matriz donde cada columna es un punto del mapa y cada fila una estacion
     tempos=np.zeros((len(puntos_mapa[0])*len(puntos_mapa[1])*len(estaciones[0]),len(puntos_mapa[2])))
@@ -77,7 +109,7 @@ def tiempo(est,puntos_mapa):
             c+=1    
     return tempos
   
-#np.savetxt('Tiempos.txt',tiempo(est,puntos_mapa),fmt='%.1f',delimiter='   ')
+tiempos=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)    
 
 
 #tiempos=tiempo(estaciones, puntos_mapa)
