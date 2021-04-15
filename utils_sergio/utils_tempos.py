@@ -206,11 +206,13 @@ def distance(lat1, lon1, lat2, lon2):
     lat2, lon2: Latitud y Longitud del segundo punto 
     """
     # Earth Radius in KM
-    R = 6371
-    dLat = np.radians(lat2 - lat1)
-    dLon = np.radians(lon2 - lon1)
+    R = 6373
+    lon1 = np.radians(lon1)
+    lon2 = np.radians(lon2)
     lat1 = np.radians(lat1)
     lat2 = np.radians(lat2)
+    dLat = lat2 - lat1
+    dLon = lon2 - lon1
     a = np.sin(dLat / 2) * np.sin(dLat / 2) + np.sin(dLon / 2) * \
         np.sin(dLon / 2) * np.cos(lat1) * np.cos(lat2)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
