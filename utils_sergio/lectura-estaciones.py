@@ -3,8 +3,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import utils_tempos as ut
-import datetime as dt
-
+import   datetime as dt
+import utils_hypoellipse as uh
+import obspy as obs 
+from scipy.interpolate import interp1d
 #Extraemos de los ficheros las posiciones de las islas y de las esatciones sismicas
 islas_long,islas_lat = np.loadtxt("contorno_islas.txt", unpack=True)
 est_lat,est_long,est_alturas=np.loadtxt("fichero_estaciones.txt",comments='---',usecols=(4,5,6),unpack=True)
@@ -63,7 +65,7 @@ def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,
     estaciones2=np.array([])
     for i in np.arange(len(est[0])):
        for j in np.arange(len(estaciones_medibles)):
-           if estaciones_medibles[j]==nombre[i]: #Solo vamos a usar aquellas estaciones cuyo ni¡ombre coincida con alguno de los que esta en las esatciones_medibles
+           if estaciones_medibles[j]==nombre[i]: #Solo vamos a usar aquellas estaciones cuyo nombre coincida con alguno de los que esta en las esatciones_medibles
                inicio_estacion=dt.datetime.strptime(fecha_i[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
                final_estacion=dt.datetime.strptime(fecha_f[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
                if inicio_estacion<=inicio_medicion<=final_estacion: #Comprobamos si cada i-estacion esta activa en el momento de la medicion
@@ -74,7 +76,6 @@ def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,
 
 #He tenido que crear 3 arrays y luego juntarlos porque no me dejaba hacerlo directamente como un array de arrays 
 #e ir añadiendo valores a cada uno de ellos. Tratare de hacerlo un poco mas "elegantemente mañana".
-
 
 def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
     """
@@ -109,18 +110,52 @@ def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fec
             c+=1    
     return tempos
   
-tiempos=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)    
+    
+#Vamos a concatenar para cada punto dado la salida que la funcion hypoellipse_format 
+def concatenador(onda_P,onda_S,estaciones_medibles,p):
+    entrada_hypoellipse=""
+    for i in np.arange(len(estaciones_medibles)):
+        Ptime=dt.datetime(2021,1,1,00,00,00)+dt.timedelta(seconds=onda_P[i][p])
+        Stime=dt.datetime(2021,1,1,00,00,00)+dt.timedelta(seconds=onda_S[i][p])
+        a=uh.hypoellipse_format(estaciones_medibles[i],Ptime,Stime, Pw = 0, Sw = 0)
+        entrada_hypoellipse=entrada_hypoellipse + a + "\n"
+    return entrada_hypoellipse    
 
+def localizador(onda_P,onda_S,estaciones_medibles,hypo_data):
+    
+    """
+    onda_P,onda_S: Arrays bidimensionales donde hemos almacenado los datos con todos los tiempos de llegadas de las ondas a cada estacion
+    hypodata: str; String con todas las fases registradas en las estaciones que se quieran localizar
+    name_file: str; Prefijo que se va a utilizar para almacenar todo
+    hypoellipse_route: str; Ruta de hypoellipse
+    fichero_vp_vs: str; Direccion del fichero de varaciones de la relacion Vp/Vs en funcion del tiempo, si existiese 
+    hypoin_file: str; Fichero hypo*.in de configuracion de hypoellipse
+    hypoctl_file: str; Fichero hypo*.ctl 
+    remove: bool; Variable para guardar o no los ficheros temporales de hypoellipse, default: True
+    return_values: bool; Si se quieren extraer los valores obtenidos de la localizacion configurar set True, default: True
+    write_catalog_file; bool; Variable para generar catalogo propio de eventos. Actualmente solo funciona si se mete un unico evento
+    magnitudes: str; String de la magnitud, solo se utiliza en el caso de localizar un unico evento. 
+    """
+        
+    tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=uh.hypoellipse_locator(hypo_data, name_file = "prueba", hypoellipse_route = "/mnt/c/Users/Sergio Catalán/Documents/GitHub/practicas_sergio/hypoellipse3", \
+                            fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in', hypoctl_file = 'hypoc_hierro.ctl', remove = True,  nombre_salida = "prueba", \
+                            return_values = True, write_catalog_file = True,  magnitudes = "")
+    return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases
+    
+onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+onda_S=onda_P/1.78
+#np.savetxt('onda_P.txt',onda_P,fmt='%.2f',delimiter='  ')
+frase1=concatenador(onda_P,onda_S,estaciones_medibles,0)
 
-#tiempos=tiempo(estaciones, puntos_mapa)
-#onda_P=tiempo(estaciones, puntos_mapa)
-#onda_S=onda_P/1.78
-#np.savetxt('OndaP.txt',onda_P,fmt='%.1f',delimiter='   ')
+tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,frase1)
+
+  
+
 
 #Definimos la funcion mediante la que representaremos nuestra imagen
 def representacion(islas_x,islas_y,est_x,est_y):
     plt.plot(islas_x,islas_y,',')     
-    plt.plot(est_x,est_y,'.')
+    plt.plot(est_x,est_y,'.')  
     plt.xlabel('Longitud')
     plt.ylabel('Latitud')    
     plt.grid()

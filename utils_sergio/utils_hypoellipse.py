@@ -94,8 +94,8 @@ def hypoellipse_format(Station, Ptime, Stime, Pw = 0, Sw = 0):
         Stime = Ptime
         flag = 1
 
-    Pval = Ptime.datetime
-    Sval = Stime.datetime
+    Pval = Ptime
+    Sval = Stime
 
 	# Ahora introducimos defectos de forma del formato de hypoellipse
     year = str(Pval.year)[2:]
