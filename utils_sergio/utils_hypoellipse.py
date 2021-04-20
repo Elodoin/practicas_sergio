@@ -96,7 +96,7 @@ def hypoellipse_format(Station, Ptime, Stime, Pw = 0, Sw = 0):
 
     Pval = Ptime
     Sval = Stime
-
+    
 	# Ahora introducimos defectos de forma del formato de hypoellipse
     year = str(Pval.year)[2:]
     day = str(Pval.day)
@@ -113,6 +113,8 @@ def hypoellipse_format(Station, Ptime, Stime, Pw = 0, Sw = 0):
         hour = "0" + str(Pval.hour)
     if Pval.minute < 10:
         minu = "0" + str(Pval.minute)
+    if Pval.second < 10:
+        sec = "0" + str(Pval.second)    
     pstr = year + month + day + hour + minu + " "
     #Asumimos en el truncamiento siguiente un error de 0.005 s, lo cual es necesario pues hypoellipse en su entrada solo acepta hasta el centisegundo.
     if flag != 0:
@@ -137,14 +139,16 @@ def hypoellipse_format(Station, Ptime, Stime, Pw = 0, Sw = 0):
         if Pval.minute != Sval.minute:
             valor = 60 + Sval.second
             sr = str(valor) + sisec
+        if Sval.second < 10:
+            sr = "0" + str(sr)
+            print(sr)
         if len(sr)<4:
-            sr = " " +  sr
-
+            sr = " " +  sr    
     if flag ==1:
         sr = "    "
 	# Construimos la oracion
     Phrases = Station + (5-len(Station))*" " + "  " + str(Pw) + " " + pstr + pr + "        " + sr  + "   " + str(Sw)
-
+    
     return Phrases
 
 
@@ -378,7 +382,7 @@ def hypoellipse_vpvs_change(name, fichero_modelo, fichero_vp_vs):
 # Localizador con hypoellipse
 def hypoellipse_locator(hypo_data, name_file = "localizacion", hypoellipse_route = "/home/sysop/Documentos/echeyde/envio_echeyde/programas_localizacion/hypoellipse3", \
                             fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in', hypoctl_file = 'hypoc_hierro.ctl', remove = True,  nombre_salida = "prueba", \
-                            return_values = True, write_catalog_file = True,  magnitudes = ""):
+                            return_values = True, write_catalog_file = False,  magnitudes = ""):
 
     """
     hypodata: str; String con todas las fases registradas en las estaciones que se quieran localizar

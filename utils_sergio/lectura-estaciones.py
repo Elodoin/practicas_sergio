@@ -14,9 +14,9 @@ vel,capas=np.loadtxt("canary.txt",comments='!',usecols=(3,4),unpack=True)
 nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt('fichero_estaciones.txt',comments='---',usecols=(0,8,9,10,11),unpack=True,dtype=str)
 
 
-rango_longitudes=np.arange(-17,-16,0.05)
-rango_latitudes=np.arange(28.6,27.9,-0.05)
-rango_profundidades=np.arange(0,20,5)
+rango_longitudes=np.array([-16.6609])
+rango_latitudes=np.array([28.2619])
+rango_profundidades=np.arange(0,20,20)
 
 puntos_mapa=np.array([rango_longitudes,rango_latitudes,rango_profundidades])
 est=np.array([est_long,est_lat,est_alturas])
@@ -43,8 +43,8 @@ dt.datetime.strptime no dejaba trabajar con las variables tipo str_, que son las
 al extraer str de un fichero, y no lograba cambiarlas de otra manera a un str normal
 """
 
-inicio_medicion=dt.datetime(1999,11,7,00,00,00)
-estaciones_medibles=np.array(['CCAN','CCHO','CFTV'])
+inicio_medicion=dt.datetime(2021,1,1,00,00,00)
+estaciones_medibles=np.array(["CCHO", "CCAN", "CPVI", "CGRA", "MACI", "CTFS", "CLAJ"])
 def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
     """
     In:
@@ -70,8 +70,8 @@ def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,
                final_estacion=dt.datetime.strptime(fecha_f[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
                if inicio_estacion<=inicio_medicion<=final_estacion: #Comprobamos si cada i-estacion esta activa en el momento de la medicion
                    estaciones0=np.append(estaciones0,est[0][i]) 
-                   estaciones1=np.append(estaciones1,est[0][i])
-                   estaciones2=np.append(estaciones2,est[0][i])  
+                   estaciones1=np.append(estaciones1,est[1][i])
+                   estaciones2=np.append(estaciones2,est[2][i])  
     return estaciones0,estaciones1,estaciones2
 
 #He tenido que crear 3 arrays y luego juntarlos porque no me dejaba hacerlo directamente como un array de arrays 
@@ -118,6 +118,7 @@ def concatenador(onda_P,onda_S,estaciones_medibles,p):
         Ptime=dt.datetime(2021,1,1,00,00,00)+dt.timedelta(seconds=onda_P[i][p])
         Stime=dt.datetime(2021,1,1,00,00,00)+dt.timedelta(seconds=onda_S[i][p])
         a=uh.hypoellipse_format(estaciones_medibles[i],Ptime,Stime, Pw = 0, Sw = 0)
+        print(onda_S[i][p])
         entrada_hypoellipse=entrada_hypoellipse + a + "\n"
     return entrada_hypoellipse    
 
@@ -138,12 +139,12 @@ def localizador(onda_P,onda_S,estaciones_medibles,hypo_data):
     """
         
     tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=uh.hypoellipse_locator(hypo_data, name_file = "prueba", hypoellipse_route = "/mnt/c/Users/Sergio Catalán/Documents/GitHub/practicas_sergio/hypoellipse3", \
-                            fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in', hypoctl_file = 'hypoc_hierro.ctl', remove = True,  nombre_salida = "prueba", \
-                            return_values = True, write_catalog_file = True,  magnitudes = "")
+                            fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in', hypoctl_file = 'hypoc_hierro.ctl', remove = False,  nombre_salida = "prueba", \
+                            return_values = True, write_catalog_file = False,  magnitudes = "")
     return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases
     
 onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
-onda_S=onda_P/1.78
+onda_S=onda_P*1.78
 #np.savetxt('onda_P.txt',onda_P,fmt='%.2f',delimiter='  ')
 frase1=concatenador(onda_P,onda_S,estaciones_medibles,0)
 
