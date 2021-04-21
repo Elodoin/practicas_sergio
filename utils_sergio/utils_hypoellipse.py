@@ -437,10 +437,9 @@ def hypoellipse_locator(hypo_data, name_file = "localizacion", hypoellipse_route
 
     if remove:
         os.system("rm *"+ name + "*")
-
+    tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases = hypoellipse_reader_out(name+".out")
     os.chdir(b)
     if return_values: 
         #Extraemos los valores que queremos
-        tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases = hypoellipse_reader_out(name+".out")
         return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases
 
