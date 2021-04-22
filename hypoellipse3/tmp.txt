@@ -96,3 +96,31 @@
  use travel time tables (no)?  n
  does this job relocate events with revised station delays (no)?  n
 
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  hypoc.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  values
+ log filename or "stdout" (values.log)?  values.log
+ filename for printer output or "screen" (values.out)?  values.out
+ will this job generate a summary file (no)?  y
+ summary output filename (values.sum)?  values.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (values.arc)?  values.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  hypoc.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  values
+ log filename or "stdout" (values.log)?  values.log
+ filename for printer output or "screen" (values.out)?  values.out
+ will this job generate a summary file (no)?  y
+ summary output filename (values.sum)?  values.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (values.arc)?  values.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+

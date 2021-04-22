@@ -14,7 +14,7 @@ reset test          2    0.
 !reset test          3   28.2
 !reset test          4   16.45
 !     test          5   -99.000    first trial depth in kilometers, unless = -99.
-reset test          5   20.
+reset test          5   0.
 !     test          6   0.0000     radius for aux rms values. if neg cont 
 !                                  iteration at most neg point.
 !     test          7   4.0000    minimum number first motions required to plot

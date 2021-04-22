@@ -1,7 +1,7 @@
 ! headopts.prm and headopts.vol contain the setup parameters
 ! for running HYPOELLIPSE.
 jump headopts.prm
-!jump headopts.vol
+jump headopts.vol
 !
 ! crustal.prm specifies the velocity model.  The first
 ! model, which is the one that will be used, shows how to set
@@ -33,7 +33,7 @@ printer option       0
 printer option       1
 !
 begin station list +1 19960101
-jump canarias.sta
+jump elhierro.sta
 arrival times next
-jump values.pha
+jump values_bulletin.pha
 
