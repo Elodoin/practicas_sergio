@@ -33,7 +33,7 @@ printer option       0
 printer option       1
 !
 begin station list +1 19960101
-jump canary.sta
+jump canarias.sta
 arrival times next
 jump values.pha
 
