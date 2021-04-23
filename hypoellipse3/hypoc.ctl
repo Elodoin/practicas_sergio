@@ -1,13 +1,13 @@
 ! headopts.prm and headopts.vol contain the setup parameters
 ! for running HYPOELLIPSE.
 jump headopts.prm
-jump headopts.vol
+!jump headopts.vol
 !
 ! crustal.prm specifies the velocity model.  The first
 ! model, which is the one that will be used, shows how to set
 ! up a linear increase over a halfspace.  The second model 
 ! illustrates a multilayer velocity model.
-jump canary.prm
+jump torre_ign.prm
 !
 ! caldata.prm contains the calibration parameters for the
 ! Akutan stations.
@@ -33,7 +33,7 @@ printer option       0
 printer option       1
 !
 begin station list +1 19960101
-jump elhierro.sta
+jump canary.sta
 arrival times next
-jump values_bulletin.pha
+jump values.pha
 
