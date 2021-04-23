@@ -7,7 +7,7 @@ jump headopts.prm
 ! model, which is the one that will be used, shows how to set
 ! up a linear increase over a halfspace.  The second model 
 ! illustrates a multilayer velocity model.
-jump torre_ign.prm
+jump canary.prm
 !
 ! caldata.prm contains the calibration parameters for the
 ! Akutan stations.
