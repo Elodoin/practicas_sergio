@@ -1,0 +1,201 @@
+ *** Hypoellipse: Unix/Non-Xpick/Y2K version 3.9 9/8/2003  ***
+  Configured for up to 1024 stations in station list
+  and up to 1501 records per earthquake.
+  Run on 21/04/23 at 16:36
+ jump headopts.prm                                                                                             
+ arrival-time record blank source fields will be assumed to be source "d"
+
+
+                                          regional network processing parameters               
+ select delays based on closest station.
+ global minimum search turned on
+ compress printed output.  code =  0
+
+ ignore sum code =     0
+ (ignore starting locations on summary records)
+ do not scan for missing stations.  code =   1
+ subroutine input1 found end of file on unit    12
+ jump canary.prm                                                                                               
+ subroutine input1 found end of file on unit    12
+ list of stations available for these solutions
+                                          regional network processing parameters               
+ begin station list +1 19960101                                                  
+ station list code =    1
+ set up for events starting on 19960101
+ name latitude  longitude  elev p thickness p p  pdy1 sdy1  pdy2 sdy2  pdy3 sdy3  pdy4 sdy4  pdy5 sdy5     calr xmgc mgwt fmgc wt 
+ * continuation  record *      thk 1   2  mod dly                                                      sys                     ps
+  polarity stawt teldy code altdy cnyrmody hr
+ aaaaz 28  44.75  17   1.81  471 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ccumn 27  44.75  18   1.81  471 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ccume 27  44.75  18   1.81  471 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ccumz 27  44.75  18   1.81  471 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ cfarz 27  43.61  18   8.41  484 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ chiez 27  43.62  17  57.64  170 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ cjulz 27  43.78  18   4.94 1271 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ cjuln 27  43.78  18   4.94 1271 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ cjule 27  43.78  18   4.94 1271 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ cmclz 27  42.76  18   1.19 1108 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ corcn 27  42.24  18   8.51   90 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ corce 27  42.24  18   8.51   90 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ corcz 27  42.24  18   8.51   90 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ crstz 27  38.53  17  58.75   29 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ crstn 27  38.53  17  58.75   29 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ crste 27  38.53  17  58.75   29 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctabz 27  44.98  18   5.10  141 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctabn 27  44.98  18   5.10  141 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctabe 27  44.98  18   5.10  141 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctamn 27  50.24  17  57.20   90 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctamz 27  50.24  17  57.20   90 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctame 27  50.24  17  57.20   90 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctann 27  45.26  18   3.26  185 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctane 27  45.26  18   3.26  185 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctanz 27  45.26  18   3.26  185 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctign 27  47.29  17  55.33  530 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctige 27  47.29  17  55.33  530 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+ ctigz 27  47.29  17  55.33  530 1 0.000.00  1 1  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00  0.00 0.00 18  0.00 0.00 1 1 1.00 1010
+ *           1.0  0.00       0.00 99999999 99
+                                           regional network processing parameters               
+
+       test variables              description
+     standard  reset to
+  1    1.7800    1.7800    ratio of p-wave velocity to s-wave velocity.
+  2    5.0000    0.0000****lt 0 no elev cor/ =0 use 1st vel/ gt 0 use this.
+  3    0.0000    0.0000    first trial latitude in degrees.
+  4    0.0000    0.0000    first trial longitude in degrees.
+  5  -99.0000    0.0000****first trial depth in kilometers, unless = -99.
+  6    0.0000    0.0000    sphere rad for aux rms values. if neg cont iteration at most neg point.
+  7   10.0000    3.0000****minimum number of first motions required to plot.
+  8    0.0000    0.0000****elevation of top of layered models (km).
+  9    0.0000    1.0000****if 0 allow neg depths in summary and archive files.
+ 10   50.0000    5.0000****apply distance weighting on this iteration.
+ 11   50.0000   30.0000****xnear = greatest distance with weight of 1.0
+ 12  100.0000  200.0000****xfar = least distnace with weight of 0.0
+ 13   50.0000   50.0000    apply azimuthal weighting on this iteration.
+ 14   50.0000   10.0000****weight out large residuals on this iteration.
+ 15   10.0000    2.0000****give zero weight to residuals gt this.
+ 16   50.0000   50.0000    apply boxcar weighting on this iteration.
+ 17    2.0000    2.0000    give zero weight to residuals gt this*stand. dev.
+ 18   50.0000   50.0000    begin jeffreys weighting on this iteration.
+ 19    0.0500    0.0500    use jeffreys weighting only if rms gt this.
+ 20    0.0500    0.0500    mu of jeffreys weighting funct.
+ 21    9.0000   15.0000****maximum number of iterations.
+ 22   35.0000   30.0000****limit change in focal depth to this amount (km).
+ 23    0.7000    0.7000    if delz would make z neg, set delz = -this*z (km).
+ 24   35.0000   35.0000    limit change in epicenter to this. (km).
+ 25   40.0000  150.0000****fix depth if epicentral change gt this. (km).
+ 26    0.0025    0.0000****stop iterating if square of adjustment lt this.
+ 27   20.0000   40.0000****global opt: if deep solution z > this, continue with z 1/2 way to surface.
+ 28    0.0000    0.0000    for fixed hypo on plane, set = plunge azimuth.  if neg. continue as free sol.
+ 29   -0.1000   -0.1000    set std err of res=+this if degrees of freedom =0 or =-this if this lt 0.
+ 30    0.0000    0.0000    dip of plunge vector for epi. fixed on plane.  see test(28) & (47) also.
+ 31   -1.1500   -1.1500    duration magnitude c1, constant.
+ 32    2.0000    2.0000    duration magnitude c2, *log((f - p)*fmgc).
+ 33    0.0000    0.0000    duration magnitude c3, *delta.
+ 34    0.0000    0.0000    if not 0, scale the normal equations.
+ 35    0.0010    0.0001****minimum damping of normal equations.  
+ 36  100.0000  100.0000    maximum first trial depth if computed from p-arrival times.
+ 37    3.0000    5.0000****if termination occurs before this iteration, set iteration number to this and continue.
+ 38    0.0000    2.0000****if this =1, run all with and then without s/ =2,run with s/ =3, run without s/ =4, fix hypo
+                              / neg, use s to fix origin.
+ 39    1.0000    1.0000****multiply the s and s-p weights by this factor.
+ 40    0.0070    0.0070    duration magnitude c4, *depth.
+ 41    0.0000    0.0000    if this =1, print opt. ge 1, & summary opt. =+ or -1, then write sum. record each itteration.
+ 42   75.0000   10.0000****global opt: deep starting z wrt top of model.
+ 43    0.0000    0.0000    duration magnitude c5, *(log((f - p)*fmgc)**2).
+ 44    0.0000    1.0000****if =1 rerun debug eqs with critical sta/ =2 continue iter with crit sta.
+ 45    0.1379    0.1061****x scale factor for focal mechanism plot.
+ 46    0.0000    0.0000****xfar set ge dist of test(46)th station + 10.  if lt 0 then fill gap.
+ 47    0.0000    0.0000    weight for fix on plane.  see test(28) and (30).
+ 48    6.5000    5.0000****half-space velocity for first trial location.
+ 49    0.0000    0.0000****if .ne. 0 calculate vp/vs ratio; if abs val >1 make wadati plot; if neg, use wadati origin in solution.
+ 50    0.0000    0.0000    for exploring rms space, compute this number of fixed depth solutions (up to 22).
+
+ 51 1000.0000 1000.0000    for epicentral distance beyond this, use first travel-time table.
+ 52 2800.0000 2800.0000    Wood Anderson static magnification assumed for local magnitude determination.
+ 53    1.0000    0.0000****if .eq. 1 stations with 4-letter codes ending e or n treated as horizontals.
+ 54  200.0000  100.0000****if 1st computed trial location > this (km) from closest station, start at closest station.
+ 55   19.0000   20.0000****assumed century for events without summary record.
+
+ weight option - relative standard errors for code:   0      1      2      3
+                                                     1.000  2.000  4.000  8.000
+
+ printer option    1   summary option     2      magnitude option    4      tabulation option  4
+
+ no event output  -2
+ one line/eq      -1
+ final solution    0   no sum records     0      use xmag            0      no summary        0
+ one line per iter 1   summary records    1      use fmag            1      a                 1
+ sta res each iter 2   sum + archive file 2      use (xmag+fmag)/2   2      a + b             2
+ regres each iter  3   archive file       3      prefer fmag /xmag   3      a,b + c           3
+                       "corrected" input  4      prefer xmag /fmag   4      a,b,c + d         4
+                                                 if neg use fms not fmp     positive/q from std errors
+                                                                            negative/q from sol+sta
+ u of a cal data file:  caldata.prm                                       
+ make compensating change in layer below variable layer.
+
+
+       velocity model  1
+   layer  velocity     depth   thickness    vpvs  
+           km/sec       km        km
+
+     1       4.200     0.000     4.000     1.780
+     2       6.300     4.000     8.000     1.780
+     3       7.500    12.000     6.000     1.780
+     4       8.000    18.000     2.000     1.780
+     5       8.000    20.000     2.000     1.780
+     6       8.000    22.000  1000.000     1.780
+ jump to prueba_tmp.pha                                    
+
+
+ detected end of file prior to final instruction record.
+ check input data for completeness.
+ jump back to main input stream.
+ could not locate event of      0  0: 0
+ ***>cchoz is not on station list, so next record  will not be used:                                                    
+CCHO   0 2101010000 0176        0314   0                                                                                
+ ***>ccanz is not on station list, so next record  will not be used:                                                    
+CCAN   0 2101010000 0359        0640   0                                                                                
+ ***>cpviz is not on station list, so next record  will not be used:                                                    
+CPVI   0 2101010000 0112        0201   0                                                                                
+ ***>cgraz is not on station list, so next record  will not be used:                                                    
+CGRA   0 2101010000 0491        0875   0                                                                                
+ ***>maciz is not on station list, so next record  will not be used:                                                    
+MACI   0 2101010000 0466        0831   0                                                                                
+ ***>ctfsz is not on station list, so next record  will not be used:                                                    
+CTFS   0 2101010000 0073        0131   0                                                                                
+ ***>clajz is not on station list, so next record  will not be used:                                                    
+CLAJ   0 2101010000 0285        0507   0                                                                                
+ xxxx this record skipped - out of place xxxx 
+                                                                                                                     
+
+ sound bell 
+  completed reading input phase file
+ there were no events located in this run.
+ irelo =  0 nreloc =  0

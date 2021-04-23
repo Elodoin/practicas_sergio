@@ -141,7 +141,6 @@ def hypoellipse_format(Station, Ptime, Stime, Pw = 0, Sw = 0):
             sr = str(valor) + sisec
         if Sval.second < 10:
             sr = "0" + str(sr)
-            print(sr)
         if len(sr)<4:
             sr = " " +  sr    
     if flag ==1:
