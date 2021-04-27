@@ -33,7 +33,7 @@ printer option       0
 printer option       1
 !
 begin station list +1 19960101
-jump elhierro.sta
+jump canarias.sta
 arrival times next
 jump prueba_tmp.pha
 

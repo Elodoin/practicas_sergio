@@ -14,9 +14,9 @@ vel,capas=np.loadtxt("canary.txt",comments='!',usecols=(3,4),unpack=True)
 nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt('fichero_estaciones.txt',comments='---',usecols=(0,8,9,10,11),unpack=True,dtype=str)
 
 
-rango_longitudes=np.array([-16.6609])
-rango_latitudes=np.array([28.2619])
-rango_profundidades=np.arange(0,20,20)
+rango_longitudes=np.arange(-17,-16,0.05)
+rango_latitudes=np.arange(28.6,27.9,-0.05)
+rango_profundidades=np.arange(0,20,5)
 
 puntos_mapa=np.array([rango_longitudes,rango_latitudes,rango_profundidades])
 est=np.array([est_long,est_lat,est_alturas])
@@ -44,7 +44,7 @@ al extraer str de un fichero, y no lograba cambiarlas de otra manera a un str no
 """
 
 inicio_medicion=dt.datetime(2021,1,1,00,00,00)
-estaciones_medibles=np.array(["CCHO", "CCAN", "CPVI", "CGRA", "MACI", "CTFS", "CLAJ"])
+estaciones_medibles=np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI"])
 def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
     """
     In:
@@ -112,15 +112,40 @@ def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fec
   
     
 #Vamos a concatenar para cada punto dado la salida que la funcion hypoellipse_format 
-def concatenador(onda_P,onda_S,estaciones_medibles,p):
+def concatenador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     entrada_hypoellipse=""
-    for i in np.arange(len(estaciones_medibles)):
-        Ptime=dt.datetime(2021,1,1,00,00,00)+dt.timedelta(seconds=onda_P[i][p])
-        Stime=dt.datetime(2021,1,1,00,00,00)+dt.timedelta(seconds=onda_S[i][p])
-        a=uh.hypoellipse_format(estaciones_medibles[i],Ptime,Stime, Pw = 0, Sw = 0)
-        print(onda_S[i][p])
-        entrada_hypoellipse=entrada_hypoellipse + a + "\n"
-    return entrada_hypoellipse    
+    for i in np.arange(len(puntos_mapa[0])*len(puntos_mapa[1])): #Este bucle recorrera cada punto del mallado
+        for j in np.arange(len(estaciones_medibles)): #Este bucle recorre cada estacion 	
+    	    Ptime=inicio_medicion+dt.timedelta(seconds=onda_P[i+j][p]) #Añadimos para cada punto lo que tarda en llegar a cada estacion
+    	    Stime=inicio_medicion+dt.timedelta(seconds=onda_S[i+j][p])
+    	    a=uh.hypoellipse_format(estaciones_medibles[j],Ptime,Stime, Pw = 0, Sw = 0) #Utilizamos hypoellipse_format para que nos saque la informacion en el formato adecuado
+    	    entrada_hypoellipse=entrada_hypoellipse + a + "\n" 
+    return entrada_hypoellipse
+
+
+    
+onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+onda_S=onda_P*1.78
+#np.savetxt('onda_P.txt',onda_P,fmt='%.2f',delimiter='  ')
+
+#Ejecutamos el concatenador para obtener la entrada del progra hypoellipse_locator y poder obtener los datos que despues debemos comparar
+frase1=concatenador(onda_P,onda_S,estaciones_medibles,0,inicio_medicion)
+
+
+#Ejecutamos la funcion hypoellipse_locator para obtener los valores que estamos buscando
+tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=\
+uh.hypoellipse_locator(frase1, name_file = "prueba", hypoellipse_route = "../hypoellipse3", fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in',\
+hypoctl_file = 'hypoc_hierro.ctl', remove = False,  nombre_salida = "prueba", return_values = True, write_catalog_file = False,  magnitudes = "")
+
+
+#Definimos la funcion mediante la que representaremos nuestra imagen
+def representacion(islas_x,islas_y,est_x,est_y):
+    plt.plot(islas_x,islas_y,',')     
+    plt.plot(est_x,est_y,'.')  
+    plt.xlabel('Longitud')
+    plt.ylabel('Latitud')    
+    plt.grid()
+    plt.show()
 
 def localizador(onda_P,onda_S,estaciones_medibles,hypo_data):
     
@@ -141,24 +166,4 @@ def localizador(onda_P,onda_S,estaciones_medibles,hypo_data):
     tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=uh.hypoellipse_locator(hypo_data, name_file = "prueba", hypoellipse_route = "../hypoellipse3", \
                             fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in', hypoctl_file = 'hypoc_hierro.ctl', remove = False,  nombre_salida = "prueba", \
                             return_values = True, write_catalog_file = False,  magnitudes = "")
-    return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases
-    
-onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
-onda_S=onda_P*1.78
-#np.savetxt('onda_P.txt',onda_P,fmt='%.2f',delimiter='  ')
-frase1=concatenador(onda_P,onda_S,estaciones_medibles,0)
-
-tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,frase1)
-
-  
-
-
-#Definimos la funcion mediante la que representaremos nuestra imagen
-def representacion(islas_x,islas_y,est_x,est_y):
-    plt.plot(islas_x,islas_y,',')     
-    plt.plot(est_x,est_y,'.')  
-    plt.xlabel('Longitud')
-    plt.ylabel('Latitud')    
-    plt.grid()
-    plt.show()
-    
+    return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases    
