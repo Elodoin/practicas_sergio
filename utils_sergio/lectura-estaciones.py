@@ -123,6 +123,7 @@ def concatenador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     	    entrada_hypoellipse=entrada_hypoellipse + a + "\n" 
         entrada_hypoellipse += "\n"
     return entrada_hypoellipse
+    
 
 
     
