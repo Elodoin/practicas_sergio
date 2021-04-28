@@ -207,7 +207,7 @@ def hypoellipse_reader_out(fichero, return_fases = False ):
         parametros origen: array-like. tiempo origen, latitud, longitud, profundidad, rms, error horizontal, error vertical
     """
 
-    with open(fichero) as f:
+    with open(fichero, "r") as f:
         hypo = np.array(f.readlines())
 
 

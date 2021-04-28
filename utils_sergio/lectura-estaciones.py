@@ -8,10 +8,11 @@ import utils_hypoellipse as uh
 import obspy as obs 
 from scipy.interpolate import interp1d
 #Extraemos de los ficheros las posiciones de las islas y de las esatciones sismicas
-islas_long,islas_lat = np.loadtxt("contorno_islas.txt", unpack=True)
-est_lat,est_long,est_alturas=np.loadtxt("fichero_estaciones.txt",comments='---',usecols=(4,5,6),unpack=True)
-vel,capas=np.loadtxt("canary.txt",comments='!',usecols=(3,4),unpack=True)
-nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt('fichero_estaciones.txt',comments='---',usecols=(0,8,9,10,11),unpack=True,dtype=str)
+path = "/home/sysop/Documentos/echeyde/envio_echeyde/practicas_sergio/practicas_sergio/utils_sergio/"
+islas_long,islas_lat = np.loadtxt(path + "contorno_islas.txt", unpack=True)
+est_lat,est_long,est_alturas=np.loadtxt(path + "fichero_estaciones.txt",comments='---',usecols=(4,5,6),unpack=True)
+vel,capas=np.loadtxt(path + "canary.txt",comments='!',usecols=(3,4),unpack=True)
+nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt(path + 'fichero_estaciones.txt',comments='---',usecols=(0,8,9,10,11),unpack=True,dtype=str)
 
 
 rango_longitudes=np.arange(-17,-16,0.05)
@@ -120,6 +121,7 @@ def concatenador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     	    Stime=inicio_medicion+dt.timedelta(seconds=onda_S[i+j][p])
     	    a=uh.hypoellipse_format(estaciones_medibles[j],Ptime,Stime, Pw = 0, Sw = 0) #Utilizamos hypoellipse_format para que nos saque la informacion en el formato adecuado
     	    entrada_hypoellipse=entrada_hypoellipse + a + "\n" 
+        entrada_hypoellipse += "\n"
     return entrada_hypoellipse
 
 
@@ -134,7 +136,7 @@ frase1=concatenador(onda_P,onda_S,estaciones_medibles,0,inicio_medicion)
 
 #Ejecutamos la funcion hypoellipse_locator para obtener los valores que estamos buscando
 tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=\
-uh.hypoellipse_locator(frase1, name_file = "prueba", hypoellipse_route = "../hypoellipse3", fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in',\
+uh.hypoellipse_locator(frase1, name_file = "prueba", hypoellipse_route = path + "../hypoellipse3", fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in',\
 hypoctl_file = 'hypoc_hierro.ctl', remove = False,  nombre_salida = "prueba", return_values = True, write_catalog_file = False,  magnitudes = "")
 
 

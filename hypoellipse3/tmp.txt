@@ -530,3 +530,87 @@
  use travel time tables (no)?  n
  does this job relocate events with revised station delays (no)?  n
 
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  prueba_tmphypoc_hierro.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  prueba_tmp
+ log filename or "stdout" (prueba_tmp.log)?  prueba_tmp.log
+ filename for printer output or "screen" (prueba_tmp.out)?  prueba_tmp.out
+ will this job generate a summary file (no)?  y
+ summary output filename (prueba_tmp.sum)?  prueba_tmp.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (prueba_tmp.arc)?  prueba_tmp.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  prueba_tmphypoc_hierro.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  prueba_tmp
+ log filename or "stdout" (prueba_tmp.log)?  prueba_tmp.log
+ filename for printer output or "screen" (prueba_tmp.out)?  prueba_tmp.out
+ will this job generate a summary file (no)?  y
+ summary output filename (prueba_tmp.sum)?  prueba_tmp.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (prueba_tmp.arc)?  prueba_tmp.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  prueba_tmphypoc_hierro.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  prueba_tmp
+ log filename or "stdout" (prueba_tmp.log)?  prueba_tmp.log
+ filename for printer output or "screen" (prueba_tmp.out)?  prueba_tmp.out
+ will this job generate a summary file (no)?  y
+ summary output filename (prueba_tmp.sum)?  prueba_tmp.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (prueba_tmp.arc)?  prueba_tmp.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  prueba_tmphypoc_hierro.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  prueba_tmp
+ log filename or "stdout" (prueba_tmp.log)?  prueba_tmp.log
+ filename for printer output or "screen" (prueba_tmp.out)?  prueba_tmp.out
+ will this job generate a summary file (no)?  y
+ summary output filename (prueba_tmp.sum)?  prueba_tmp.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (prueba_tmp.arc)?  prueba_tmp.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  prueba_tmphypoc_hierro.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  prueba_tmp
+ log filename or "stdout" (prueba_tmp.log)?  prueba_tmp.log
+ filename for printer output or "screen" (prueba_tmp.out)?  prueba_tmp.out
+ will this job generate a summary file (no)?  y
+ summary output filename (prueba_tmp.sum)?  prueba_tmp.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (prueba_tmp.arc)?  prueba_tmp.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+
+ begin hypoellipse
+
+ hypoellipse input filename (stdin)?  prueba_tmphypoc_hierro.ctl
+ allow overwriting of existing output files (no)?  y
+ root for output filenames (hypoe)?  prueba_tmp
+ log filename or "stdout" (prueba_tmp.log)?  prueba_tmp.log
+ filename for printer output or "screen" (prueba_tmp.out)?  prueba_tmp.out
+ will this job generate a summary file (no)?  y
+ summary output filename (prueba_tmp.sum)?  prueba_tmp.sum
+ will this job generate an archive file (no)?  y
+ archive output filename (prueba_tmp.arc)?  prueba_tmp.arc
+ use travel time tables (no)?  n
+ does this job relocate events with revised station delays (no)?  n
+

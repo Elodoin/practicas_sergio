@@ -1,3 +1,4 @@
+#! encoding = utf-8
 #Aqui ira el programa que lea el fichero de estaciones
 
 import matplotlib.pyplot as plt
