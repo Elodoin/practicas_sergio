@@ -162,17 +162,9 @@ def localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     
     return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases    
     
-    
-inicio_medicion=dt.datetime(2021,1,1,00,00,00)
-estaciones_medibles=np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI"])   
-onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
-onda_S=onda_P*1.78
- 
-#Ejecutamos la funcion localizador para obtener los ficheros que necesitamos    
-tiempos, latitudes,longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,0,inicio_medicion)
-
 
 def calculo_errores(puntos_mapa,p,longitudes,latitudes,prof):
+	#Ordeno las latitudes, longitudes y profundidades en un mallado 2D para restarlo mas facilmente con las obtenidas por hypoellipse
 	lat_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
 	long_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
 	prof_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))+p
@@ -183,41 +175,33 @@ def calculo_errores(puntos_mapa,p,longitudes,latitudes,prof):
 	long_hypo=np.array(longitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))			
 	lat_hypo=np.array(latitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
 	prof_hypo=np.array(prof).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
-	
-	errores_lat=(lat_teoricas-lat_hypo)
-	errores_long=(long_teoricas_long_hypo)
-	errores_prof=(prof_teorica-prof_hypo)
-	
+	errores_lat=abs(lat_teoricas-lat_hypo)*111
+	errores_long=abs(long_teoricas-long_hypo)*111
+	errores_prof=abs(prof_teoricas-prof_hypo)
 	return errores_lat,errores_long,errores_prof
-		
-lat_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
-long_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
-prof_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
-a=0
-for i in np.arange(len(puntos_mapa[1])):
-	for j in np.arange(len(puntos_mapa[0])):
-		long_teoricas[i][j]==puntos_mapa[0][j]
-		lat_teoricas[i][j]==puntos_mapa[1][i]
-		latitudes.itemset(a, float(latitudes[a]))
 
+#Definimos algunas de nuestras variables
+inicio_medicion=dt.datetime(2021,1,1,00,00,00)
+estaciones_medibles=np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI"])   
+onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+onda_S=onda_P*1.78
+ 
+#Ejecutamos la funcion localizador para obtener los ficheros que necesitamos    
+tiempos, latitudes,longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,0,inicio_medicion)
 
-longitudes=float(longitudes)
-long_hypo=np.array(longitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))			
-lat_hypo=np.array(latitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
-prof_hypo=np.array(prof).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
-	
-	
-#errores_lat=(lat_teoricas-lat_hypo)
-#errores_long=(long_teoricas_long_hypo)
-#errores_prof=(prof_teorica-prof_hypo)	
-#print(long_hypo[0][0]-long_teoricas[0][0])
-print(type(longitudes[0][0]))    
-print(type(long_teoricas[0][0]))    
-print(type(float(longitudes[0]))) 
-#np.savetxt('lon_teoricas', long_teoricas,fmt='%.2f')
-#np.savetxt('lat_teoricas', lat_teoricas,fmt='%.2f')    
-    
-    
+#Transformamos las latitudes, longitudes y profundidades a floats, ya que el programa las saca como strings 
+longitudes=longitudes.astype(float)
+latitudes=latitudes.astype(float)
+prof=prof.astype(float)
+
+#ejecutamos la funcion mediante la que calculamos los errores
+errores_lat,errores_long,errores_prof=calculo_errores(puntos_mapa,0,longitudes,latitudes,prof)			
+
+"""	
+np.savetxt('error_long', errores_long,fmt='%.2f')
+np.savetxt('error_lat', errores_lat,fmt='%.2f')
+np.savetxt('error_prof', errores_prof,fmt='%.2f')
+"""    
     
     
     

@@ -379,7 +379,7 @@ def hypoellipse_vpvs_change(name, fichero_modelo, fichero_vp_vs):
     
 
 # Localizador con hypoellipse
-def hypoellipse_locator(hypo_data, name_file = "localizacion", hypoellipse_route = "/home/sysop/Documentos/echeyde/envio_echeyde/programas_localizacion/hypoellipse3", \
+def hypoellipse_locator(hypo_data, name_file = "localizacion", hypoellipse_route = "../hypoellipse3", \
                             fichero_vp_vs = None, hypoin_file = 'hypo_hierro.in', hypoctl_file = 'hypoc_hierro.ctl', remove = True,  nombre_salida = "prueba", \
                             return_values = True, write_catalog_file = False,  magnitudes = ""):
 
