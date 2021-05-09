@@ -14,7 +14,6 @@ est_lat,est_long,est_alturas=np.loadtxt(path + "fichero_estaciones.txt",comments
 vel,capas=np.loadtxt(path + "canary.txt",comments='!',usecols=(3,4),unpack=True)
 nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt(path + 'fichero_estaciones.txt',comments='---',usecols=(0,8,9,10,11),unpack=True,dtype=str)
 
-
 rango_longitudes=np.arange(-17,-16,0.05)
 rango_latitudes=np.arange(28.6,27.9,-0.05)
 rango_profundidades=np.arange(0,20,5)
@@ -123,14 +122,7 @@ def concatenador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     return entrada_hypoellipse
 
 
-#Definimos la funcion mediante la que representaremos nuestra imagen
-def representacion(islas_x,islas_y,est_x,est_y):
-    plt.plot(islas_x,islas_y,',')     
-    plt.plot(est_x,est_y,'.')  
-    plt.xlabel('Longitud')
-    plt.ylabel('Latitud')    
-    plt.grid()
-    plt.show()
+
 
 def localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     
@@ -163,48 +155,64 @@ def localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases    
     
 
-def calculo_errores(puntos_mapa,p,longitudes,latitudes,prof):
-	#Ordeno las latitudes, longitudes y profundidades en un mallado 2D para restarlo mas facilmente con las obtenidas por hypoellipse
+def calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medicion):
+	#Ejecutamos la funcion localizador para obtener los ficheros que necesitamos    
+	tiempos, latitudes,longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion)
+	
+	#Transformamos las latitudes, longitudes y profundidades a floats, ya que el programa las saca como strings y las coloco en un mallado 2D
+	longitudes=longitudes.astype(float)
+	latitudes=latitudes.astype(float)
+	prof=prof.astype(float)
+	long_hypo=np.array(longitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))			
+	lat_hypo=np.array(latitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
+	prof_hypo=np.array(prof).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
+	
+	#Ordeno las latitudes, longitudes y profundidades teoricas en un mallado 2D para restarlo mas facilmente con las obtenidas por hypoellipse
 	lat_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
 	long_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
-	prof_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))+p
+	prof_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))+puntos_mapa[2][p]
+	
 	for i in np.arange(len(puntos_mapa[1])):
 		for j in np.arange(len(puntos_mapa[0])):
 			long_teoricas[i][j]=puntos_mapa[0][j]
 			lat_teoricas[i][j]=puntos_mapa[1][i]
-	long_hypo=np.array(longitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))			
-	lat_hypo=np.array(latitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
-	prof_hypo=np.array(prof).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
+	#Calculamos los errores para cada magnitud y cada punto del mapa
 	errores_lat=abs(lat_teoricas-lat_hypo)*111
-	errores_long=abs(long_teoricas-long_hypo)*111
+	errores_long=abs((long_teoricas-long_hypo)*np.cos(lat_teoricas)*111)
 	errores_prof=abs(prof_teoricas-prof_hypo)
-	return errores_lat,errores_long,errores_prof
+	return errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas
 
+#Definimos la funcion mediante la que representaremos nuestra imagen
+def representacion(lat_teoricas,long_teoricas,islas_long,islas_lat,est_long,est_lat):
+    plt.imshow(errores_lat,extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.45)
+    plt.plot(islas_long,islas_lat)  
+    plt.plot(est_long,est_lat,'.') 
+    plt.xlabel('Longitud')
+    plt.ylabel('Latitud')   
+    plt.xlim(min(puntos_mapa[0]),max(puntos_mapa[0]))
+    plt.ylim(min(puntos_mapa[1]),max(puntos_mapa[1])) 
+    plt.colorbar()
+    plt.show()
+
+    
 #Definimos algunas de nuestras variables
 inicio_medicion=dt.datetime(2021,1,1,00,00,00)
 estaciones_medibles=np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI"])   
 onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
 onda_S=onda_P*1.78
- 
-#Ejecutamos la funcion localizador para obtener los ficheros que necesitamos    
-tiempos, latitudes,longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,0,inicio_medicion)
 
-#Transformamos las latitudes, longitudes y profundidades a floats, ya que el programa las saca como strings 
-longitudes=longitudes.astype(float)
-latitudes=latitudes.astype(float)
-prof=prof.astype(float)
-
-#ejecutamos la funcion mediante la que calculamos los errores
-errores_lat,errores_long,errores_prof=calculo_errores(puntos_mapa,0,longitudes,latitudes,prof)			
-
+#Ejecutamos la funcion mediante la que calculamos los errores
+errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas=calculo_errores(puntos_mapa,0,onda_P,onda_S,estaciones_medibles,inicio_medicion)			
+representacion(lat_teoricas,long_teoricas,islas_long,islas_lat,est_long,est_lat)
 """	
 np.savetxt('error_long', errores_long,fmt='%.2f')
 np.savetxt('error_lat', errores_lat,fmt='%.2f')
 np.savetxt('error_prof', errores_prof,fmt='%.2f')
 """    
+
+
+
+ 
     
-    
-    
-    
-    
+
     
