@@ -106,7 +106,7 @@ def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fec
                     tempos[p][k]=t[0]
                 p+=1 
             c+=1    
-    return tempos
+    return tempos,estaciones
   
     
 #Vamos a definir una funcion que concatene para cada punto dado la salida que la funcion hypoellipse_format 
@@ -186,7 +186,7 @@ def calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medic
 def representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_medibles,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f):
 	    
     	#Obtenemos los valores de llegada de las ondas P y S
-    	onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+    	onda_P,estaciones=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
     	onda_S=onda_P*1.78
     	nombre_errores=['longitud','latitud','profundidad']
     	fig, axs = plt.subplots(len(puntos_mapa[2]),3)
@@ -196,9 +196,9 @@ def representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_medibles,inic
     		errores=np.array([errores_long,errores_lat,errores_prof])
     		for col in range(3):
     	    		ax= axs[p,col]
-    	    		a=ax.imshow(errores[col],extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.7,cmap='bwr')
+    	    		a=ax.imshow(errores[col],extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.7,cmap='seismic')
     	    		ax.plot(islas_long,islas_lat,color='k')
-    	    		ax.plot(est[0],est[1],'.',color='r')
+    	    		ax.plot(estaciones[0],estaciones[1],'.',color='k')
     	    		ax.set_xlabel('Longitud')
     	    		ax.set_ylabel('Latitud')
     	    		ax.set_title('Error en %s a profundidad %i [km]' %(nombre_errores[col],puntos_mapa[2][p]))    
