@@ -16,7 +16,7 @@ nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt(path + 'fichero_estaciones.tx
 
 rango_longitudes=np.arange(-17,-16,0.05)
 rango_latitudes=np.arange(28.6,27.9,-0.05)
-rango_profundidades=np.arange(0,20,5)
+rango_profundidades=np.arange(0,10,5)
 
 puntos_mapa=np.array([rango_longitudes,rango_latitudes,rango_profundidades])
 est=np.array([est_long,est_lat,est_alturas])
@@ -183,27 +183,41 @@ def calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medic
 	return errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas
 
 #Definimos la funcion mediante la que representaremos nuestra imagen
-def representacion(lat_teoricas,long_teoricas,islas_long,islas_lat,est_long,est_lat):
-    plt.imshow(errores_lat,extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.45)
-    plt.plot(islas_long,islas_lat)  
-    plt.plot(est_long,est_lat,'.') 
-    plt.xlabel('Longitud')
-    plt.ylabel('Latitud')   
-    plt.xlim(min(puntos_mapa[0]),max(puntos_mapa[0]))
-    plt.ylim(min(puntos_mapa[1]),max(puntos_mapa[1])) 
-    plt.colorbar()
-    plt.show()
+def representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_medibles,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f):
+	    
+    	#Obtenemos los valores de llegada de las ondas P y S
+    	onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+    	onda_S=onda_P*1.78
+    	nombre_errores=['longitud','latitud','profundidad']
+    	fig, axs = plt.subplots(len(puntos_mapa[2]),3)
+    	for p in range(len(puntos_mapa[2])):
+    		#Ejecutamos la funcion mediante la que calculamos los errores
+    		errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas=calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medicion)			
+    		errores=np.array([errores_long,errores_lat,errores_prof])
+    		for col in range(3):
+    	    		ax= axs[p,col]
+    	    		a=ax.imshow(errores[col],extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.7,cmap='bwr')
+    	    		ax.plot(islas_long,islas_lat,color='k')
+    	    		ax.plot(est[0],est[1],'.',color='r')
+    	    		ax.set_xlabel('Longitud')
+    	    		ax.set_ylabel('Latitud')
+    	    		ax.set_title('Error en %s a profundidad %i [km]' %(nombre_errores[col],puntos_mapa[2][p]))    
+    	    		ax.set_xlim(min(puntos_mapa[0]),max(puntos_mapa[0]))
+    	    		ax.set_ylim(min(puntos_mapa[1]),max(puntos_mapa[1])) 
+    	    		fig.colorbar(a,ax=ax,shrink=1)
+    	plt.show()
 
     
 #Definimos algunas de nuestras variables
 inicio_medicion=dt.datetime(2021,1,1,00,00,00)
 estaciones_medibles=np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI"])   
-onda_P=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
-onda_S=onda_P*1.78
 
-#Ejecutamos la funcion mediante la que calculamos los errores
-errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas=calculo_errores(puntos_mapa,0,onda_P,onda_S,estaciones_medibles,inicio_medicion)			
-representacion(lat_teoricas,long_teoricas,islas_long,islas_lat,est_long,est_lat)
+#Ejecutamos el programa de representacion de los mapas de error
+
+
+representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_medibles,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f)
+
+
 """	
 np.savetxt('error_long', errores_long,fmt='%.2f')
 np.savetxt('error_lat', errores_lat,fmt='%.2f')
