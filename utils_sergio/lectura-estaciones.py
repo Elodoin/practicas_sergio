@@ -14,9 +14,9 @@ est_lat,est_long,est_alturas=np.loadtxt(path + "fichero_estaciones.txt",comments
 vel,capas=np.loadtxt(path + "canary.txt",comments='!',usecols=(3,4),unpack=True)
 nombre,fecha_i,hora_i,fecha_f,hora_f=np.genfromtxt(path + 'fichero_estaciones.txt',comments='---',usecols=(0,8,9,10,11),unpack=True,dtype=str)
 
-rango_longitudes=np.arange(-17,-16,0.05)
-rango_latitudes=np.arange(28.6,27.9,-0.05)
-rango_profundidades=np.arange(0,10,5)
+rango_longitudes=np.arange(-18.45,-12.5,0.5)
+rango_latitudes=np.arange(29.6,27.3,-0.5)
+rango_profundidades=np.arange(0,20,5)
 
 puntos_mapa=np.array([rango_longitudes,rango_latitudes,rango_profundidades])
 est=np.array([est_long,est_lat,est_alturas])
@@ -43,7 +43,7 @@ dt.datetime.strptime no dejaba trabajar con las variables tipo str_, que son las
 al extraer str de un fichero, y no lograba cambiarlas de otra manera a un str normal
 """
 
-def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
+def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_entrada,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
     """
     In:
         Estaciones = Array de 3 arrays en los que colocaremos la longitud, latitud y profundidad de cada estacion respectivamente
@@ -61,21 +61,29 @@ def seleccion_estaciones(Estaciones,Momento_medicion,Estaciones_medibles,Nombre,
     estaciones0=np.array([])
     estaciones1=np.array([])
     estaciones2=np.array([])
-    for i in np.arange(len(est[0])):
-       for j in np.arange(len(estaciones_medibles)):
-           if estaciones_medibles[j]==nombre[i]: #Solo vamos a usar aquellas estaciones cuyo nombre coincida con alguno de los que esta en las esatciones_medibles
-               inicio_estacion=dt.datetime.strptime(fecha_i[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
-               final_estacion=dt.datetime.strptime(fecha_f[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
-               if inicio_estacion<=inicio_medicion<=final_estacion: #Comprobamos si cada i-estacion esta activa en el momento de la medicion
-                   estaciones0=np.append(estaciones0,est[0][i]) 
-                   estaciones1=np.append(estaciones1,est[1][i])
-                   estaciones2=np.append(estaciones2,est[2][i])  
-    return estaciones0,estaciones1,estaciones2
+    estaciones_medibles=[]
+    #Creamos un array con los nombres de las estaciones que queremos medir sin que se repita ningun nombre
+    for item in Nombre:
+    	if item not in estaciones_medibles: 
+    		if item in Estaciones_entrada:
+        		estaciones_medibles=np.append(estaciones_medibles,item) #Estaciones cuyo nombre coincide con las que damos por la entrada
+    i=0
+    for n in Nombre:
+    	
+    	if n in estaciones_medibles:
+    	 	inicio_estacion=dt.datetime.strptime(fecha_i[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
+    	 	final_estacion=dt.datetime.strptime(fecha_f[i][0:10] + hora_i[i][0:7],"%Y/%m/%d%H:%M:%S")
+    	 	if inicio_estacion<=inicio_medicion<=final_estacion: #Comprobamos si cada i-estacion esta activa en el momento de la medicion
+    	 		estaciones0=np.append(estaciones0,est[0][i])
+    	 		estaciones1=np.append(estaciones1,est[1][i])
+    	 		estaciones2=np.append(estaciones2,est[2][i])
+    	i=i+1 				
+    return estaciones0,estaciones1,estaciones2,estaciones_medibles
 
 #He tenido que crear 3 arrays y luego juntarlos porque no me dejaba hacerlo directamente como un array de arrays 
 #e ir añadiendo valores a cada uno de ellos.
 
-def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
+def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,estaciones_entrada,Nombre,Fecha_i,Hora_i,Fecha_f,Hora_f):
     """
     In:
         Estaciones = Array de 3 arrays en los que colocaremos la longitud, latitud y profundidad[km] de cada estacion respectivamente 
@@ -91,7 +99,7 @@ def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fec
                  Cada columna representa una profundidad y en ellas se colocan los tiempos, primero desde el primer punto hasta cada 
                  una de las estaciones, despues desde el segundo punto a cada esatcion y así sucesivamente.
     """
-    a,b,c=seleccion_estaciones(est,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+    a,b,c,estaciones_medibles=seleccion_estaciones(est,inicio_medicion,estaciones_entrada,nombre,fecha_i,hora_i,fecha_f,hora_f)
     estaciones=np.array([a,b,c]) #Este es el array que contiene los datos geograficos de las estaciones señaladas 
     d=np.zeros((len(estaciones[0]),len(puntos_mapa[0])*len(puntos_mapa[1]))) #Matriz donde cada columna es un punto del mapa y cada fila una estacion
     tempos=np.zeros((len(puntos_mapa[0])*len(puntos_mapa[1])*len(estaciones[0]),len(puntos_mapa[2])))
@@ -106,25 +114,28 @@ def tiempo(Estaciones,Puntos_mapa,Inicio_medicion,Estaciones_medibles,Nombre,Fec
                     tempos[p][k]=t[0]
                 p+=1 
             c+=1    
-    return tempos,estaciones
+
+    return tempos,estaciones,d,estaciones_medibles
   
     
 #Vamos a definir una funcion que concatene para cada punto dado la salida que la funcion hypoellipse_format 
-def concatenador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
+def concatenador(onda_P,onda_S,p,inicio_medicion,estaciones_medibles):
     entrada_hypoellipse=""
+    b=0
     for i in np.arange(len(puntos_mapa[0])*len(puntos_mapa[1])): #Este bucle recorrera cada punto del mallado
         for j in np.arange(len(estaciones_medibles)): #Este bucle recorre cada estacion 	
-    	    Ptime=inicio_medicion+dt.timedelta(seconds=onda_P[i+j][p]) #Añadimos para cada punto lo que tarda en llegar a cada estacion
-    	    Stime=inicio_medicion+dt.timedelta(seconds=onda_S[i+j][p])
+    	    Ptime=inicio_medicion+dt.timedelta(seconds=onda_P[b][p]) #Añadimos para cada punto lo que tarda en llegar a cada estacion
+    	    Stime=inicio_medicion+dt.timedelta(seconds=onda_S[b][p])
     	    a=uh.hypoellipse_format(estaciones_medibles[j],Ptime,Stime, Pw = 0, Sw = 0) #Utilizamos hypoellipse_format para que nos saque la informacion en el formato adecuado
-    	    entrada_hypoellipse=entrada_hypoellipse + a + "\n" 
+    	    entrada_hypoellipse=entrada_hypoellipse + a + "\n"
+    	    b=b+1
         entrada_hypoellipse += "\n"
     return entrada_hypoellipse
 
 
 
 
-def localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
+def localizador(onda_P,onda_S,p,inicio_medicion,estaciones_medibles):
     
     """
     onda_P,onda_S: Arrays bidimensionales donde hemos almacenado los datos con todos los tiempos de llegadas de las ondas a cada estacion
@@ -145,7 +156,7 @@ def localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     """
       
     #Ejecutamos el concatenador para obtener la entrada del programa hypoellipse_locator y poder obtener los datos que despues debemos comparar
-    hypodata=concatenador(onda_P,onda_S,estaciones_medibles,0,inicio_medicion)   
+    hypodata=concatenador(onda_P,onda_S,p,inicio_medicion,estaciones_medibles)   
     
     #Ejecutamos la funcion hypoellipse_locator para obtener los valores que estamos buscando 
     tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=\
@@ -155,17 +166,16 @@ def localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion):
     return tiempos, latitudes, longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases    
     
 
-def calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medicion):
+def calculo_errores(puntos_mapa,p,onda_P,onda_S,inicio_medicion,estaciones_medibles):
 	#Ejecutamos la funcion localizador para obtener los ficheros que necesitamos    
-	tiempos, latitudes,longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,estaciones_medibles,p,inicio_medicion)
-	
+	tiempos, latitudes,longitudes, prof, rms, semiaxis1, semiaxis2, semiaxis3, azimuth1, azimuth2, angle_gap, numero_fases=localizador(onda_P,onda_S,p,inicio_medicion,estaciones_medibles)
 	#Transformamos las latitudes, longitudes y profundidades a floats, ya que el programa las saca como strings y las coloco en un mallado 2D
 	longitudes=longitudes.astype(float)
 	latitudes=latitudes.astype(float)
 	prof=prof.astype(float)
-	long_hypo=np.array(longitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))			
-	lat_hypo=np.array(latitudes).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
-	prof_hypo=np.array(prof).reshape(len(puntos_mapa[1]),len(puntos_mapa[0]))
+	long_hypo=np.array(longitudes).reshape(len(puntos_mapa[0]),len(puntos_mapa[1])).T			
+	lat_hypo=np.array(latitudes).reshape(len(puntos_mapa[0]),len(puntos_mapa[1])).T
+	prof_hypo=np.array(prof).reshape(len(puntos_mapa[0]),len(puntos_mapa[1])).T
 	
 	#Ordeno las latitudes, longitudes y profundidades teoricas en un mallado 2D para restarlo mas facilmente con las obtenidas por hypoellipse
 	lat_teoricas=np.zeros((len(puntos_mapa[1]),len(puntos_mapa[0])))
@@ -178,52 +188,58 @@ def calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medic
 			lat_teoricas[i][j]=puntos_mapa[1][i]
 	#Calculamos los errores para cada magnitud y cada punto del mapa
 	errores_lat=abs(lat_teoricas-lat_hypo)*111
-	errores_long=abs((long_teoricas-long_hypo)*np.cos(lat_teoricas)*111)
+	errores_long=abs((long_teoricas-long_hypo)*np.cos(lat_teoricas*(np.pi/180.))*111)
 	errores_prof=abs(prof_teoricas-prof_hypo)
-	return errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas
+	return errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas,lat_hypo,latitudes
 
 #Definimos la funcion mediante la que representaremos nuestra imagen
-def representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_medibles,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f):
+def representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_entrada,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f):
 	    
     	#Obtenemos los valores de llegada de las ondas P y S
-    	onda_P,estaciones=tiempo(est,puntos_mapa,inicio_medicion,estaciones_medibles,nombre,fecha_i,hora_i,fecha_f,hora_f)
+    	onda_P,estaciones,d,estaciones_medibles=tiempo(est,puntos_mapa,inicio_medicion,estaciones_entrada,nombre,fecha_i,hora_i,fecha_f,hora_f)
     	onda_S=onda_P*1.78
     	nombre_errores=['longitud','latitud','profundidad']
+    	#plt.ion()
     	fig, axs = plt.subplots(len(puntos_mapa[2]),3)
+    	#plt.subplots_adjust(wspace=0.1,hspace=0.1)
     	for p in range(len(puntos_mapa[2])):
     		#Ejecutamos la funcion mediante la que calculamos los errores
-    		errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas=calculo_errores(puntos_mapa,p,onda_P,onda_S,estaciones_medibles,inicio_medicion)			
+    		errores_lat,errores_long,errores_prof,lat_teoricas,long_teoricas,lat_hypo,latitudes\
+    		=calculo_errores(puntos_mapa,p,onda_P,onda_S,inicio_medicion,estaciones_medibles)			
     		errores=np.array([errores_long,errores_lat,errores_prof])
     		for col in range(3):
-    	    		ax= axs[p,col]
-    	    		a=ax.imshow(errores[col],extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.7,cmap='seismic')
+    	    		if len(puntos_mapa[2])==1:
+    	    			ax=axs[col]
+    	    		else:
+    	    			ax= axs[p,col]
+    	    		a=ax.imshow(errores[col],extent=[min(puntos_mapa[0]),max(puntos_mapa[0]),min(puntos_mapa[1]),max(puntos_mapa[1])],alpha=0.5,cmap='viridis',vmin=0.,vmax=5.)
     	    		ax.plot(islas_long,islas_lat,color='k')
-    	    		ax.plot(estaciones[0],estaciones[1],'.',color='k')
+    	    		ax.plot(estaciones[0],estaciones[1],'.',color='g')
     	    		ax.set_xlabel('Longitud')
     	    		ax.set_ylabel('Latitud')
     	    		ax.set_title('Error en %s a profundidad %i [km]' %(nombre_errores[col],puntos_mapa[2][p]))    
     	    		ax.set_xlim(min(puntos_mapa[0]),max(puntos_mapa[0]))
     	    		ax.set_ylim(min(puntos_mapa[1]),max(puntos_mapa[1])) 
-    	    		fig.colorbar(a,ax=ax,shrink=1)
+    	    		fig.colorbar(a,ax=ax)
+    	    		fig.tight_layout()
     	plt.show()
+    	return onda_P,errores_lat,lat_teoricas,lat_hypo,latitudes,onda_P,onda_S,d,estaciones_medibles
 
-    
 #Definimos algunas de nuestras variables
 inicio_medicion=dt.datetime(2021,1,1,00,00,00)
-estaciones_medibles=np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI"])   
-
+estaciones_entrada=np.sort(list(nombre[0:58]))
+#+["EOSO","GGC","CLUM","EGOM"])
+#np.array(["CCAN","CCHO","CGRA","CLAJ","CPVI", "CTFS","MACI","CGUI"])   
 #Ejecutamos el programa de representacion de los mapas de error
 
+onda_P,errores_lat,lat_teoricas,lat_hypo,latitudes,onda_P,onda_S,d,estaciones_medibles=representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_entrada,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f)
 
-representacion(islas_long,islas_lat,est,puntos_mapa,estaciones_medibles,inicio_medicion,nombre,fecha_i,hora_i,fecha_f,hora_f)
-
-
-"""	
-np.savetxt('error_long', errores_long,fmt='%.2f')
-np.savetxt('error_lat', errores_lat,fmt='%.2f')
-np.savetxt('error_prof', errores_prof,fmt='%.2f')
-"""    
-
+"""
+np.savetxt('lat_teoricas', lat_teoricas,fmt='%.2f')
+np.savetxt('lat_hypo', lat_hypo,fmt='%.2f')
+np.savetxt('latitudes', latitudes,fmt='%.2f')
+np.savetxt('onda_P',onda_P,fmt='%.2f')
+"""
 
 
  
